@@ -8,9 +8,9 @@ from time import sleep
 #################################################
 #################################################
 
-api_id = ""
-api_hash = ""
-admin_id = ""
+api_id = "22198860"
+api_hash = "aff71d347f324de853c5e20e6fbd1bd9"
+admin_id = "@zakarea79"
 
 #################################################
 #################################################
@@ -57,9 +57,9 @@ def main(c:Client , m:Message):
     global messageIdData
     global Database
     global caption
-
+    
     usertext = m.text
-
+    
     if addPost == True:
         if m.text == "stopaddpost":
             addPost = False
@@ -93,14 +93,16 @@ def main(c:Client , m:Message):
 
     elif EditDatabase == True:
         if m.text == "EndEditData":
-            EditDatabase == False
-            data = ""
-            for i in Database:
-                data += i + "\n+|+\n"
-            f = open("database.txt", "w" , encoding="utf-8")
-            f.write(data)
-            f.close()
             EditDatabase = False
+            try:
+                data = ""
+                for i in Database:
+                    data += i + "\n+|+\n"
+                f = open("database.txt", "w" , encoding="utf-8")
+                f.write(data)
+                f.close()
+            except:
+                pass
             app.send_message(m.chat.id , "اطلاعات دیتا بیس به روز شد")
 
         else:
@@ -113,16 +115,21 @@ def main(c:Client , m:Message):
                         data += f"{index} : {i} \n\n"
                         index += 1
                 if Database.__len__() == 0:
-                    c.edit_message_text(m.chat.id , messageIdData , "دیتا بیس خالی")
+                    c.edit_message_text(m.chat.id , messageIdData , "دیتا بیس خالی" + "\n\nبرای حذف پست شماره ایندکس پست را ارسال کنید و برای ذخیره تعقییرات `EndEditData` را ارسال کنید")
                 else:
-                    c.edit_message_text(m.chat.id , messageIdData , data)
+                    c.edit_message_text(m.chat.id , messageIdData , data + "\n\nبرای حذف پست شماره ایندکس پست را ارسال کنید و برای ذخیره تعقییرات `EndEditData` را ارسال کنید")
             except:
                 app.send_message(m.chat.id , "امکان حذف وجود ندارد")
 
     elif m.text == "editData" and EditDatabase == False:
-        f = open("database.txt", "r" ,encoding="utf-8")
-        txt = f.read()
-        f.close()
+        try:
+            f = open("database.txt", "r" ,encoding="utf-8")
+            txt = f.read()
+            f.close()
+        except:
+            app.send_message(m.chat.id , "دیتا بیس خالی" + "\n\nبرای حذف پست شماره ایندکس پست را ارسال کنید و برای ذخیره تعقییرات `EndEditData` را ارسال کنید")
+            EditDatabase = True
+            return
 
         if txt != "":
             Database = txt.split("\n+|+\n")
@@ -163,9 +170,12 @@ def main(c:Client , m:Message):
 """)
 
     elif m.text == "deletdata":
-        f = open("database.txt", "w" , encoding="utf-8")
-        f.write("")
-        f.close()
+        try:
+            f = open("database.txt", "w" , encoding="utf-8")
+            f.write("")
+            f.close()
+        except:
+            pass
         app.send_message(m.chat.id , "دیتا بیس پاک شد")
 
     elif m.text == "startautosend":
@@ -194,7 +204,7 @@ def main(c:Client , m:Message):
                         except:
                             pass
             else:
-                print("detabase Empty")
+                app.send_message(m.chat.id , "دیتا بیس خالی")
 
     elif m.text == "Stopautosend":
         stratAutoSend = False
@@ -202,9 +212,13 @@ def main(c:Client , m:Message):
         pass
 
     elif m.text == "send":
-        f = open("database.txt", "r" ,encoding="utf-8")
-        txt = f.read()
-        f.close()
+        try:
+            f = open("database.txt", "r" ,encoding="utf-8")
+            txt = f.read()
+            f.close()
+        except:
+            app.send_message(m.chat.id , "دیتا بیس خالی")
+            return
         if txt != "":
             List = txt.split("\n+|+\n")
             List.pop(List.__len__()-1)
